@@ -1,0 +1,9 @@
+server:
+  port: 9090
+spring:
+  application:
+    name: credit-card-ddd
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
