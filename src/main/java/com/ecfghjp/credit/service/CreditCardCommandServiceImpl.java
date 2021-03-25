@@ -28,15 +28,15 @@ public class CreditCardCommandServiceImpl implements CreditCardCommandService {
 	}
 
 	@Override
-	public CompletableFuture<String> payment(String eventId, TransactionRequestDTO paymentRequestDTO) {
+	public CompletableFuture<String> payment(TransactionRequestDTO paymentRequestDTO) {
 
-		return commandGateway.send(new CreditCardPaymentCommand(eventId, paymentRequestDTO.getTransactionAmount()));
+		return commandGateway.send(new CreditCardPaymentCommand(paymentRequestDTO.getCreditCardNumber(), paymentRequestDTO.getTransactionAmount()));
 	}
 
 	@Override
-	public CompletableFuture<String> repayment(String eventId, TransactionRequestDTO paymentRequestDTO) {
+	public CompletableFuture<String> repayment(TransactionRequestDTO paymentRequestDTO) {
 
-		return commandGateway.send(new CreditCardRepaymentCommand(eventId, paymentRequestDTO.getTransactionAmount()));
+		return commandGateway.send(new CreditCardRepaymentCommand(paymentRequestDTO.getCreditCardNumber(), paymentRequestDTO.getTransactionAmount()));
 
 	}
 

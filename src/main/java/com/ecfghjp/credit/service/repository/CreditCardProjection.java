@@ -7,6 +7,7 @@ import org.axonframework.queryhandling.QueryHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.ecfghjp.credit.domain.aggregate.CreditCardStatus;
 import com.ecfghjp.credit.domain.event.CreditCardCreatedEvent;
 import com.ecfghjp.credit.domain.event.CreditCardPaymentDoneEvent;
 import com.ecfghjp.credit.domain.event.CreditCardRepaymentDoneEvent;
@@ -24,26 +25,26 @@ public class CreditCardProjection {
 
 	@EventHandler
 	public void on(CreditCardCreatedEvent creditCardCreatedEvent) {
-		CreditCardView creditCardJPA = new CreditCardView();
-		creditCardJPA.setBalance(creditCardCreatedEvent.getCreditLimit());
-		creditCardJPA.setCreditCardNumber(creditCardCreatedEvent.getCreditCardNumber());
-		creditCardJPARepository.save(creditCardJPA);
+		CreditCardView creditCardView = new CreditCardView(creditCardCreatedEvent.getCreditCardNumber(),
+				creditCardCreatedEvent.getCreditLimit());
+		creditCardView.setStatus(String.valueOf(CreditCardStatus.ACTIVATED));
+		creditCardJPARepository.save(creditCardView);
 	}
 
 	@EventHandler
 	public void on(CreditCardPaymentDoneEvent creditCardPaymentDoneEvent) {
 		Optional<CreditCardView> optional = creditCardJPARepository.findById(creditCardPaymentDoneEvent.getId());
-		CreditCardView creditCardJPA = optional.get();
-		creditCardJPA.setBalance(creditCardJPA.getBalance().subtract(creditCardPaymentDoneEvent.getPaymentAmount()));
-		creditCardJPARepository.save(creditCardJPA);
+		CreditCardView creditCardView = optional.get();
+		creditCardView.pay(creditCardPaymentDoneEvent.getPaymentAmount());
+		creditCardJPARepository.save(creditCardView);
 	}
 
 	@EventHandler
 	public void on(CreditCardRepaymentDoneEvent creditCardRepaymentDoneEvent) {
 		Optional<CreditCardView> optional = creditCardJPARepository.findById(creditCardRepaymentDoneEvent.getId());
-		CreditCardView creditCardJPA = optional.get();
-		creditCardJPA.setBalance(creditCardJPA.getBalance().add(creditCardRepaymentDoneEvent.getRepaymentAmount()));
-		creditCardJPARepository.save(creditCardJPA);
+		CreditCardView creditCardView = optional.get();
+		creditCardView.repay(creditCardRepaymentDoneEvent.getRepaymentAmount());
+		creditCardJPARepository.save(creditCardView);
 	}
 
 	@QueryHandler

@@ -40,19 +40,6 @@ public class CreditCardAggregate {
 	public CreditCardAggregate() {
 	}
 
-	public CreditCardAggregate(String id, String creditCardNumber, BigDecimal balance, BigDecimal transactionAmount,
-			LocalDateTime transactionDate, TransactionPurpose transactionPurpose,
-			TransactionStatus creditCardTransactionStatus, CreditCardStatus creditCardStatus) {
-		this.id = id;
-		this.creditCardNumber = creditCardNumber;
-		this.balance = balance;
-		this.transactionAmount = transactionAmount;
-		this.transactionDate = transactionDate;
-		this.transactionPurpose = transactionPurpose;
-		this.creditCardTransactionStatus = creditCardTransactionStatus;
-		this.creditCardStatus = creditCardStatus;
-	}
-
 	// refactor the aggregate to a command and event and event handler class
 	// command to create credit card
 	@CommandHandler

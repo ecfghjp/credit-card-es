@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ecfghjp.credit.service.CreditCardQueryService;
 import com.ecfghjp.credit.service.repository.CreditCardView;
+import com.ecfghjp.credit.service.repository.TransactionsView;
 
 import io.swagger.annotations.Api;
 
@@ -29,6 +30,11 @@ public class CreditCardQueryController {
 	@GetMapping("/{accountNumber}/events")
 	public List<Object> listEventsForAccount(@PathVariable(value = "accountNumber") String accountNumber) {
 		return creditCardQueryService.listEventsForCreditCard(accountNumber);
+	}
+	
+	@GetMapping("/transactions/{accountNumber}")
+	public CompletableFuture<List<TransactionsView>> listAllTransactions(@PathVariable(value = "accountNumber") String accountNumber) {
+		return creditCardQueryService.getAllCreditCardTransactions(accountNumber);
 	}
 	
 	@GetMapping("/{accountNumber}")
